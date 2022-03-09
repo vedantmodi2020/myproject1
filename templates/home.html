@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item active">Boards</li>
+{% endblock %}
+
+{% block content %}
+  <table class="table">
+    <thead class="thead-inverse">
+      <tr style="background-color:#8a888896">
+        <th>Board</th>
+        <th>Posts</th>
+        <th>Topics</th>
+        <th>Last Post</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for board in boards %}
+        <tr style="background-color:#f35f5f63">
+          <td>
+            <a href="{% url 'board_topics' board.pk %}">{{ board.name }}</a>
+            <small class="text-muted d-block">{{ board.description }}</small>
+          </td>
+          <td class="align-middle" style="color:#b7e60b;">
+            {{ board.get_posts_count }}
+          </td>
+          <td class="align-middle" style="color:#b7e60b;">
+            {{ board.topics.count }}
+          </td>
+          <td class="align-middle" style="color:#b7e60b;">
+            {% with post=board.get_last_post %}
+  {% if post %}
+    <small>
+      <a href="{% url 'topic_posts' board.pk post.topic.pk %}" style="color:#45dfa4; font-size: 1.2em;">
+        By {{ post.created_by.username }} at {{ post.created_at }}
+      </a>
+    </small>
+  {% else %}
+    <small class="text-muted">
+      <em>No posts yet.</em>
+    </small>
+  {% endif %}
+{% endwith %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
